@@ -31,6 +31,13 @@ const SITE_QR_BASENAME = 'qr/district-h-website-qr'
 const WIFI = '<span class="nw">Wi-Fi</span>'
 const prose = (text: string): string => esc(text).replace(/Wi-Fi/g, WIFI)
 
+/** Địa chỉ in trên poster: tên miền và đường dẫn mỗi phần liền một khối, chỉ được xuống dòng giữa hai phần. */
+function urlText(url: string): string {
+  const { origin } = new URL(url)
+  const rest = url.slice(origin.length)
+  return `<span class="nw">${esc(origin)}</span>${rest ? `<wbr><span class="nw">${esc(rest)}</span>` : ''}`
+}
+
 const isHttps = (value: string): boolean => {
   try {
     return new URL(value).protocol === 'https:'
@@ -260,7 +267,7 @@ function posterBody(c: SiteConfig): string {
         <div class="step__text">
           <h2 id="p-site">${num(index + 1)}<span>Nhóm Zalo và đường đi</span></h2>
           <p>Khi đã vào mạng, quét mã này để xem nhóm Zalo (không bắt buộc) và đường đi đến tiệm.</p>
-          <p class="step__fallback">Hoặc mở địa chỉ: <strong translate="no">${c.siteUrl ? esc(c.siteUrl) : 'chưa có địa chỉ'}</strong></p>
+          <p class="step__fallback">Hoặc mở địa chỉ: <strong translate="no">${c.siteUrl ? urlText(c.siteUrl) : 'chưa có địa chỉ'}</strong></p>
         </div>
       </section>`
   })
