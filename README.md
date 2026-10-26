@@ -74,6 +74,8 @@ Chuỗi `WIFI:T:WPA;S:<tên mạng>;P:<mật khẩu>;;` theo quy ước ZXing, �
 
 ## Triển khai (GitHub Pages)
 
+**Hiện tại đang chạy tại** `https://dangnhathuycntt-byte.github.io/district-h-barbershop/` (repo công khai `dangnhathuycntt-byte/district-h-barbershop`); `siteUrl` và `print/poster-a4.pdf` đã dùng địa chỉ này. Các bước dưới đây là cách làm lại từ đầu hoặc chuyển sang nơi khác.
+
 Repo đã có workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml): đẩy code lên nhánh `main` là tự build và đăng lên GitHub Pages.
 
 1. Tạo repo trên GitHub rồi đẩy code lên nhánh `main`.

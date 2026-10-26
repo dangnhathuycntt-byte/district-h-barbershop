@@ -23,9 +23,18 @@ Chuỗi Wi-Fi mong đợi: `WIFI:T:WPA;S:<tên mạng>;P:<mật khẩu>;;`, vớ
 
 - **jsQR** giải file PNG (`print/qr/district-h-wifi-qr.png`, 1230×1230 px) ra đúng từng ký tự, ở kích thước đầy đủ **và** khi thu nhỏ còn ~25% (mô phỏng quét từ xa).
 - Đọc ngược chuỗi bằng bộ phân tích độc lập: tên mạng và mật khẩu đọc ngược ra đúng bằng giá trị trong config.
-- **Apple Vision** (cùng họ bộ đọc Camera iPhone) đọc **trực tiếp file PDF poster ở 300 dpi**: tìm thấy đủ 2 mã, mã Wi-Fi vùng module rộng ~66 mm, mã website ~41 mm, cả hai ra đúng nội dung.
-- Phép thử poster hai mã dùng địa chỉ tạm `https://district-h-test.invalid/` (đuôi `.invalid` dành riêng cho thử nghiệm, nằm ngoài sản phẩm). **Mã website thật chưa tồn tại vì chưa có địa chỉ deploy.**
+- **Apple Vision** (cùng họ bộ đọc Camera iPhone) đọc **trực tiếp file PDF poster ở 300 dpi**: tìm thấy đủ 2 mã, mã Wi-Fi vùng module rộng ~66 mm, mã website ~41 đến 42 mm, cả hai ra đúng nội dung.
+- Mã website chỉ được tạo **sau khi** địa chỉ deploy trả 200: `https://dangnhathuycntt-byte.github.io/district-h-barbershop/`. Trước đó, pipeline poster được thử bằng địa chỉ tạm `https://district-h-test.invalid/` (đuôi `.invalid` dành riêng cho thử nghiệm, không nằm trong sản phẩm).
+- Poster cuối `print/poster-a4.pdf`: Vision đọc ra cả hai mã, mã website ~42 mm, đúng địa chỉ trên.
+- Tải mã QR trực tiếp từ bản **đang chạy trên GitHub Pages** rồi giải mã lại bằng jsQR: khớp ở kích thước đầy đủ và thu nhỏ 25%.
 - Mã 33×33 module (Wi-Fi), ECC mức M, vùng yên tĩnh 4 module, module đen thuần trên nền trắng.
+
+## Triển khai và bản đang chạy
+
+- Repo công khai `dangnhathuycntt-byte/district-h-barbershop`; workflow GitHub Pages chạy xanh 2 lần (build trên Ubuntu/Node 22: `npm ci`, `tsc`, `vite build`; deploy 8 đến 11 s).
+- Địa chỉ `https://dangnhathuycntt-byte.github.io/district-h-barbershop/` trả 200; trang chủ, `poster.html`, file QR PNG/SVG, font, CSS, `favicon.svg`, `robots.txt` đều 200 đúng loại tệp.
+- Trên bản live: có `canonical` và `og:url` đúng địa chỉ, `noindex`, không tràn ngang ở 390 px, đủ 6 font đã nạp, nút sao chép ghi đủ 13 ký tự vào clipboard, **chỉ một nguồn request (chính trang)**, 0 cảnh báo/lỗi console.
+- Chưa gắn tên miền riêng. Khi đổi sang tên miền khác, `siteUrl` đổi và phải in lại poster (xem README).
 
 ## Liên kết
 
@@ -51,4 +60,3 @@ Ghi chú: một ảnh chụp desktop ban đầu cho thấy hướng dẫn tự m
 - Quét từ tờ in thật ở khoảng 1 m.
 - Đọc màn hình thật (VoiceOver/TalkBack) và chế độ `prefers-reduced-motion` (chỉ đọc từ CSS, chưa chạy giả lập).
 - Script `npm run print` mới chạy trên macOS với Google Chrome; Windows/Linux dựa vào bộ dò đường dẫn Chrome nhưng chưa thử.
-- Workflow GitHub Pages chưa chạy lần nào (chưa có repo).
