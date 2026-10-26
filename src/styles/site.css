@@ -1,0 +1,370 @@
+@import './base.css';
+
+.page {
+  width: min(100% - 2.5rem, 30rem);
+  margin-inline: auto;
+  padding-block: max(2.5rem, env(safe-area-inset-top)) max(3rem, env(safe-area-inset-bottom));
+}
+
+/* ---------- Đầu trang ---------- */
+
+.welcome {
+  max-width: 34ch;
+  margin: 1.75rem 0 0;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+}
+
+.rule {
+  display: block;
+  height: 1px;
+  margin-top: 2.25rem;
+  background: var(--ink);
+  transform-origin: left center;
+}
+
+/* ---------- Các mục ---------- */
+
+.block {
+  padding-block: 2rem 2.25rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.block__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.block p {
+  max-width: 38ch;
+  margin: 0 0 1.25rem;
+  text-wrap: pretty;
+}
+
+.block .menu {
+  margin-bottom: 1.5rem;
+}
+
+/* ---------- Nút ---------- */
+
+.actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 1.4rem;
+  font: 600 1rem/1.25 var(--font-body);
+  color: var(--ink);
+  text-decoration: none;
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 2px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgb(138 90 36 / 0.2);
+  transition:
+    background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.btn--primary {
+  color: var(--paper);
+  background: var(--ink);
+}
+
+.btn:active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn--primary:active {
+  background: var(--bronze-deep);
+  border-color: var(--bronze-deep);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .btn--primary:hover {
+    background: var(--bronze-deep);
+    border-color: var(--bronze-deep);
+  }
+}
+
+.icon {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.icon--trail {
+  margin-left: auto;
+}
+
+/* Nút sao chép: đổi sang dấu tick khi đã chép xong. */
+.icon--done {
+  display: none;
+}
+
+[data-state='done'] .icon--idle {
+  display: none;
+}
+
+[data-state='done'] .icon--done {
+  display: inline-block;
+  color: var(--bronze);
+}
+
+.status {
+  min-height: 1.5rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.95rem;
+  color: var(--bronze-deep);
+}
+
+.block .status {
+  max-width: none;
+  margin-bottom: 0;
+}
+
+/* ---------- Hướng dẫn tự nối Wi-Fi ---------- */
+
+.guide {
+  margin-top: 0.5rem;
+  padding: 1rem 0 0.25rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.97rem;
+}
+
+.guide p {
+  margin-bottom: 0.75rem;
+}
+
+.guide ol {
+  margin: 0;
+  padding-left: 1.4rem;
+}
+
+.guide li {
+  padding-left: 0.25rem;
+  margin-bottom: 0.4rem;
+}
+
+.guide li::marker {
+  color: var(--bronze-deep);
+  font-weight: 600;
+}
+
+/* Có JS thì hướng dẫn thu gọn cho tới khi bấm "Kết nối Wi-Fi"; không có JS thì luôn hiện. */
+.js .guide:not(.is-open) {
+  display: none;
+}
+
+.no-js .actions [data-connect],
+.no-js .actions [data-copy],
+.no-js .status {
+  display: none;
+}
+
+/* ---------- Mã QR Wi-Fi ---------- */
+
+.qr {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 1rem 1.25rem;
+  align-items: start;
+  margin-top: 2rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.qr__frame {
+  padding: 0.4rem;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.qr__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.qr__text h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.qr__text p {
+  margin-bottom: 0.6rem;
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+}
+
+.block .qr__note {
+  grid-column: 1 / -1;
+  max-width: 44ch;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.qr__downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.qr__downloads a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  font-weight: 600;
+  color: var(--bronze-deep);
+}
+
+.qr__downloads .icon {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+/* ---------- Chân trang ---------- */
+
+.footer {
+  padding-top: 2rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.footer p {
+  margin: 0;
+}
+
+.footer__name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ---------- Màn hình rộng: tên hiệu bên trái, nội dung bên phải ---------- */
+
+@media (min-width: 62rem) {
+  .page {
+    display: grid;
+    grid-template-columns: minmax(20rem, 5fr) minmax(26rem, 6fr);
+    column-gap: clamp(4rem, 8vw, 8rem);
+    width: min(100% - 8rem, 72rem);
+    padding-block: 5rem 4rem;
+  }
+
+  .masthead {
+    position: sticky;
+    top: 4rem;
+    align-self: start;
+  }
+
+  .masthead .wordmark__main {
+    font-size: clamp(5rem, 9vw, 6rem);
+  }
+
+  .masthead .wordmark__sub {
+    font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  }
+
+  .content {
+    grid-column: 2;
+  }
+
+  .block:first-child {
+    padding-top: 0.5rem;
+  }
+
+  .qr {
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+  }
+
+  .actions {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+
+  .actions--single {
+    grid-auto-flow: row;
+    grid-template-columns: minmax(0, 20rem);
+  }
+
+  .footer {
+    grid-column: 1 / -1;
+    padding-top: 3rem;
+  }
+}
+
+/* ---------- Chuyển động: một khoảnh khắc duy nhất khi mở trang ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .wordmark__main,
+  .wordmark__sub {
+    animation: rise 0.95s var(--ease-out) both;
+  }
+
+  .wordmark__sub {
+    animation-delay: 0.12s;
+  }
+
+  .rule {
+    animation: draw 1.2s 0.25s var(--ease-out) both;
+  }
+
+  .welcome {
+    animation: fade 0.9s 0.35s var(--ease-out) both;
+  }
+}
+
+@keyframes rise {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(0.25em);
+  }
+  to {
+    clip-path: inset(0 0 -20% 0);
+    transform: none;
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+*.log
+# Ghi chú dev của skill thiết kế, không phải sản phẩm
+.impeccable/review
+.impeccable/build

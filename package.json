@@ -1,0 +1,29 @@
+{
+  "name": "district-h-barbershop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Trang landing QR cho District H Barbershop: Wi-Fi, nhóm Zalo, đường đi.",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "verify:qr": "node scripts/verify-qr.ts",
+    "print": "node scripts/export-print.ts",
+    "qr": "node scripts/export-print.ts --qr-only"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/pngjs": "^6.0.5",
+    "jsqr": "^1.4.0",
+    "lucide-static": "^1.61.0",
+    "pngjs": "^7.0.0",
+    "typescript": "^7.0.2",
+    "uqr": "^0.1.3",
+    "vite": "^8.3.5"
+  }
+}

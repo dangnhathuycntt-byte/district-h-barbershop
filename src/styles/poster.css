@@ -1,0 +1,247 @@
+@import './base.css';
+
+/*
+ * Poster A4 (210 x 297 mm). Giấy trắng, chữ đen, đồng: in trên máy in văn phòng không tốn mực nền,
+ * và mã QR luôn là module đen thuần trên nền trắng để máy quét nhận chắc.
+ */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+html {
+  background: #e7e2d9;
+}
+
+body {
+  margin: 0;
+  background: transparent;
+  font-size: 4.3mm;
+  line-height: 1.5;
+}
+
+.sheet {
+  width: 210mm;
+  height: 297mm;
+  margin: 8mm auto;
+  padding: 12mm;
+  background: #fff;
+  box-shadow: 0 2mm 8mm rgb(23 19 15 / 0.18);
+  overflow: hidden;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff;
+  }
+
+  .sheet {
+    margin: 0;
+    box-shadow: none;
+    break-after: avoid;
+    break-inside: avoid;
+  }
+}
+
+.frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 9mm 12mm 7mm;
+  border: 0.35mm solid var(--bronze);
+}
+
+/* ---------- Tên hiệu ---------- */
+
+.wordmark--poster .wordmark__main {
+  font-size: 33mm;
+  animation: none;
+}
+
+.wordmark--poster .wordmark__sub {
+  margin-top: 5mm;
+  font-size: 7.4mm;
+  animation: none;
+}
+
+/* ---------- Các bước ---------- */
+
+.steps {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 6mm;
+  margin-block: 6mm 4mm;
+  padding-top: 6mm;
+  border-top: 0.35mm solid var(--ink);
+}
+
+.step {
+  display: grid;
+  column-gap: 8mm;
+}
+
+.step h2 {
+  margin: 0 0 3mm;
+  font-family: var(--font-display);
+  font-size: 10.5mm;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.step__num {
+  display: block;
+  margin-bottom: 1.5mm;
+  font-size: 15mm;
+  line-height: 0.9;
+  color: var(--bronze);
+}
+
+.step__text p {
+  margin: 0 0 3mm;
+  color: var(--ink-soft);
+}
+
+.step__qr {
+  line-height: 0;
+}
+
+/* Vùng yên tĩnh (4 module) nằm ngoài mép cột, để các module đen thẳng hàng với chữ. */
+.poster-qr {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-left: calc(-100% * 4 / var(--qr-modules, 1000000));
+}
+
+.step--solo .poster-qr {
+  margin-left: 0;
+}
+
+.poster-qr--draft {
+  display: grid;
+  place-content: center;
+  aspect-ratio: 1;
+  padding: 4mm;
+  text-align: center;
+  line-height: 1.4;
+  border: 0.5mm dashed var(--bronze);
+  color: var(--bronze-deep);
+}
+
+.poster-qr--draft p {
+  margin: 0 0 2mm;
+  font-size: 3.6mm;
+}
+
+.poster-qr--draft code {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+/* Bước 1: Wi-Fi, mã lớn nhất và đứng đầu. */
+.step--wifi {
+  grid-template-columns: 82mm 1fr;
+  grid-template-areas:
+    'qr text'
+    'creds creds';
+  row-gap: 4mm;
+  align-items: start;
+}
+
+.step--wifi .step__qr {
+  grid-area: qr;
+}
+
+.step--wifi .step__text {
+  grid-area: text;
+  padding-top: 6mm;
+}
+
+.step--wifi .step__creds {
+  grid-area: creds;
+}
+
+.step__creds .menu dt {
+  font-size: 4.2mm;
+}
+
+.step__creds .menu dd {
+  font-size: 7mm;
+}
+
+.step__creds .menu__row {
+  padding: 2.5mm 0;
+}
+
+.step__note {
+  margin: 3mm 0 0;
+  font-size: 3.8mm;
+  color: var(--muted);
+}
+
+/* Bước 2: website (Zalo + đường đi). */
+.step--site {
+  grid-template-columns: 52mm 1fr;
+  align-items: center;
+  padding-top: 7mm;
+  border-top: 0.35mm solid var(--line);
+}
+
+.step__fallback {
+  font-size: 4mm;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.step__fallback strong {
+  font-weight: 600;
+}
+
+/* Poster chỉ có mã Wi-Fi: mã to, căn giữa. */
+.step--solo {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'qr'
+    'text'
+    'creds';
+  justify-items: center;
+  text-align: center;
+}
+
+.step--solo .step__qr {
+  width: 118mm;
+}
+
+.step--solo .step__text {
+  padding-top: 0;
+}
+
+.step--solo .step__creds {
+  width: 100%;
+}
+
+/* ---------- Chân poster ---------- */
+
+.poster-foot p {
+  margin: 0;
+  font-size: 3.8mm;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+@media screen and (max-width: 230mm) {
+  html {
+    overflow-x: auto;
+  }
+
+  .sheet {
+    margin-inline: 4mm;
+  }
+}

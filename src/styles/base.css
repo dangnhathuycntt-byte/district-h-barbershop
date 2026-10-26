@@ -1,0 +1,165 @@
+@import './fonts.css';
+
+/* Màu và chữ dùng chung cho website và poster. */
+:root {
+  --paper: #f3eee5;
+  --paper-deep: #e9e2d4;
+  --ink: #17130f;
+  --ink-soft: #4b4339;
+  --muted: #6a5f52;
+  --bronze: #8a5a24;
+  --bronze-deep: #6b4418;
+  --line: rgb(23 19 15 / 0.18);
+
+  --font-display: 'Barlow Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Be Vietnam Pro', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Những phần trình duyệt tự vẽ cũng mang màu của thương hiệu. */
+::selection {
+  background: var(--bronze);
+  color: var(--paper);
+}
+
+:root {
+  scrollbar-color: var(--bronze) var(--paper-deep);
+  accent-color: var(--bronze);
+  caret-color: var(--bronze);
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--bronze);
+  outline-offset: 3px;
+}
+
+.nw {
+  white-space: nowrap;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Tên hiệu: DISTRICT H trên, BARBERSHOP dàn đều đúng bằng chiều rộng dòng trên. */
+.wordmark {
+  display: inline-grid;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.wordmark__main {
+  font-size: clamp(3.6rem, 21vw, 6rem);
+  white-space: nowrap;
+}
+
+.wordmark__accent {
+  color: var(--bronze);
+}
+
+.wordmark__sub {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.7em;
+  font-size: clamp(0.95rem, 4.6vw, 1.4rem);
+  line-height: 1;
+}
+
+/* Bảng thông tin kiểu bảng giá: nhãn ... giá trị, nối bằng đường chấm. */
+.menu {
+  margin: 0;
+  padding: 0;
+}
+
+.menu__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.menu dt {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+}
+
+.menu dt::after {
+  content: '';
+  flex: 1 1 1rem;
+  min-width: 1rem;
+  border-bottom: 1px dotted rgb(23 19 15 / 0.4);
+  transform: translateY(-0.25em);
+}
+
+.menu dd {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* Màn hình hẹp (website): nhãn nằm trên giá trị, cả hai dòng giống nhau, tên mạng không bị rớt dòng lệch. */
+@media (max-width: 25.99rem) {
+  .page .menu__row {
+    display: block;
+  }
+
+  .page .menu dt::after {
+    display: none;
+  }
+
+  .page .menu dd {
+    margin-top: 0.1rem;
+    text-align: left;
+  }
+}
