@@ -1,6 +1,6 @@
 # District H Barbershop: trang QR cho khách
 
-Website tĩnh một trang + poster A4 để khách quét mã, vào Wi-Fi của tiệm, rồi (tuỳ chọn) tham gia nhóm Zalo và xem đường đi.
+Poster A4 có mã QR Wi-Fi để khách vào mạng của tiệm, và một website tĩnh một trang để (tuỳ chọn) tham gia nhóm Zalo và xem đường đi.
 
 ## Luồng của khách
 
@@ -12,9 +12,9 @@ Poster A4 trong tiệm
                               Cần internet, nên quét sau khi đã vào Wi-Fi.
 ```
 
-Vì sao poster có **hai** mã: quét QR thì không cần mạng, nhưng *mở trang web* thì cần. Khách hết data hoặc sóng yếu mà chỉ có mã website thì không mở được trang để lấy mật khẩu. Mã Wi-Fi in trên poster giải quyết đúng chỗ đó. Tên mạng và mật khẩu cũng được in chữ trên poster để gõ tay nếu không quét được.
+Vì sao Wi-Fi nằm trên poster chứ không nằm trên website: quét QR thì không cần mạng, nhưng *mở trang web* thì cần. Khách chưa có mạng mà phải mở web mới lấy được mật khẩu thì không vào được. Vì vậy mã Wi-Fi in thẳng trên poster, kèm tên mạng và mật khẩu bằng chữ để gõ tay nếu không quét được. Website **không hiển thị Wi-Fi**.
 
-> **Web không thể tự nối Wi-Fi cho điện thoại.** Trang này không bao giờ làm vậy và không nói như vậy. Nút "Kết nối Wi-Fi" sao chép mật khẩu và mở hướng dẫn tự chọn mạng. Muốn trang tự bật lên sau khi khách vào Wi-Fi thì cần *captive portal* trên router (xem mục cuối).
+> **Web không thể tự nối Wi-Fi cho điện thoại**, nên website không có nút kết nối. Việc vào mạng do camera điện thoại làm khi quét mã Wi-Fi trên poster (khách chạm xác nhận một lần). Muốn trang tự bật lên sau khi khách vào Wi-Fi thì cần *captive portal* trên router (xem mục cuối).
 
 ## Chạy trên máy
 
@@ -36,7 +36,7 @@ Mọi thông tin nằm ở **một file**: [`src/config.ts`](src/config.ts). Web
 | --- | --- |
 | Tên Wi-Fi / mật khẩu | `wifi.ssid`, `wifi.password` (mật khẩu WPA dài 8–63 ký tự; `hidden: true` nếu mạng ẩn tên) |
 | Link nhóm Zalo / Google Maps | `links.zalo`, `links.maps` (phải là `https://`) |
-| Lời chào, lời cảm ơn, tên hiệu | `shop.welcome`, `shop.thanks`, `shop.wordmark` |
+| Lời chào, lời cảm ơn | `shop.welcome`, `shop.thanks` |
 | Địa chỉ website sau khi deploy | `siteUrl` |
 | Poster in mấy mã | `poster.qrCodes` |
 
@@ -44,11 +44,15 @@ Sau khi sửa: `npm run build` kiểm tra, rồi **in lại poster** nếu đổ
 
 Đổi mật khẩu Wi-Fi nghĩa là mã QR Wi-Fi cũ trên poster **không còn vào được mạng**: phải in poster mới.
 
+### Logo
+
+Logo của tiệm là file `public/logo.png` (chữ và biểu tượng màu ink, nền trong suốt), dùng trên trang chủ và đầu poster. Nó được tạo từ ảnh logo chủ tiệm gửi (trắng trên nền đen), bản gốc lưu ở `brand/logo-original.png`. Muốn đổi logo: thay `public/logo.png` bằng ảnh mới (PNG nền trong suốt, nên rộng từ ~600 px) và sửa `LOGO_SIZE` (rộng/cao) trong `src/site.ts` cho đúng tỷ lệ. Ảnh gốc chỉ có dạng ảnh điểm, chưa có file vector (SVG); nếu chủ tiệm có file vector thì dùng bản đó sẽ nét hơn khi in lớn.
+
 ## Mã QR và poster
 
 | Lệnh | Việc làm |
 | --- | --- |
-| `npm run qr` | Xuất mã QR Wi-Fi (PNG 1200px+ in được, SVG vector) vào `print/qr/`. Không cần `siteUrl`, không cần Chrome. |
+| `npm run qr` | Xuất các file mã QR (PNG 1200px+ in được, SVG vector) vào `print/qr/`: Wi-Fi và, khi đã có `siteUrl`, website. Không cần Chrome. Đây là nơi duy nhất có file QR Wi-Fi: website không đăng nó để tải. |
 | `npm run print` | Xuất `print/poster-a4.pdf` (1 trang A4) + mã QR. Cần Chrome/Chromium (tự dò; hoặc đặt `CHROME_PATH`). **Từ chối chạy** nếu poster có mã website mà `siteUrl` còn trống. |
 | `npm run verify:qr` | Giải mã lại các mã QR và so với config. Thêm `-- --files print/qr` để giải mã luôn các file PNG đã xuất. |
 
@@ -101,7 +105,7 @@ GitHub Pages hiện là **bản dự phòng**: `https://dangnhathuycntt-byte.git
 Repo đã có workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml): đẩy code lên nhánh `main` là tự build và đăng lên GitHub Pages.
 
 1. Tạo repo trên GitHub rồi đẩy code lên nhánh `main`.
-   **Lưu ý:** GitHub Pages miễn phí cần repo công khai, nên mã nguồn (kèm mật khẩu Wi-Fi trong `src/config.ts`) cũng công khai. Website vốn đã hiển thị mật khẩu cho bất kỳ ai có địa chỉ, nên mức lộ tương đương. Nếu muốn mã nguồn riêng tư, dùng Cloudflare Pages (bên dưới).
+   **Lưu ý:** GitHub Pages miễn phí cần repo công khai, nên mã nguồn (kèm mật khẩu Wi-Fi trong `src/config.ts`) cũng công khai. Mật khẩu vốn đã in công khai trên poster trong tiệm, nhưng nếu muốn mã nguồn riêng tư, dùng Cloudflare Pages (bên dưới).
 2. Vào **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. Chờ workflow xanh ở tab **Actions**. Địa chỉ cuối cùng hiện ở bước *deploy* và ở **Settings → Pages**. Với tài khoản `ten-tai-khoan` và repo `ten-repo`, mặc định là `https://ten-tai-khoan.github.io/ten-repo/`.
 4. (Khuyến nghị) Gắn tên miền ngắn: **Settings → Pages → Custom domain**, nhập ví dụ `wifi.ten-mien.vn`, rồi tại nơi quản lý DNS tạo bản ghi `CNAME` cho `wifi` trỏ về `ten-tai-khoan.github.io`. Tên miền ngắn cho mã QR ít chấm hơn nên quét dễ hơn khi in nhỏ. Bật **Enforce HTTPS** khi GitHub cấp xong chứng chỉ. (Tên miền gốc dạng `ten-mien.vn` cần bản ghi `A` theo hướng dẫn hiện hành của GitHub.)
@@ -126,7 +130,7 @@ Sửa `siteUrl` → `npm run print` → `npm run verify:qr -- --files print/qr` 
 
 ## Riêng tư và công khai
 
-- Mật khẩu Wi-Fi nằm trong HTML của trang (brief yêu cầu hiển thị rõ). Bất kỳ ai có địa chỉ đều thấy. Lớp chặn chính là thẻ `<meta name="robots" content="noindex, nofollow">` trên mỗi trang, để công cụ tìm kiếm không lập chỉ mục mật khẩu. `robots.txt` chỉ có tác dụng khi dùng tên miền riêng (ở địa chỉ dạng `tài-khoản.github.io/repo/` file không nằm ở gốc nên bị bỏ qua). Đây là hàng rào lịch sự, không phải bảo mật: ai biết địa chỉ vẫn xem được.
+- Trang chủ **không** chứa mật khẩu Wi-Fi và không đăng file mã QR Wi-Fi. Mật khẩu có trong poster (in trong tiệm) và trong `src/config.ts` (repo công khai, kể cả `print/poster-a4.pdf` đã commit). Trang xem thử poster `poster.html` **không** được đăng cùng website: nó chỉ được dựng khi chạy `npm run print`, hoặc xem khi chạy `npm run dev` rồi mở `/poster.html`. Lớp chặn chính là thẻ `<meta name="robots" content="noindex, nofollow">` trên mỗi trang, để công cụ tìm kiếm không lập chỉ mục mật khẩu. `robots.txt` chỉ có tác dụng khi dùng tên miền riêng (ở địa chỉ dạng `tài-khoản.github.io/repo/` file không nằm ở gốc nên bị bỏ qua). Đây là hàng rào lịch sự, không phải bảo mật: ai biết địa chỉ vẫn xem được.
 - Nếu lo ngại, dùng mạng khách (guest network) riêng với mật khẩu thay đổi định kỳ.
 - Không có analytics, tracking, cookie hay banner cookie. Mã QR được tạo ngay trên máy lúc build; mật khẩu không gửi tới dịch vụ bên thứ ba nào. Trang không gọi tài nguyên ngoài (font, ảnh, script đều tự host). Chỉ có hai liên kết ra ngoài khi khách bấm: Zalo và Google Maps.
 - Mật khẩu không nằm trong `<title>`, meta description hay thẻ chia sẻ.
@@ -157,8 +161,8 @@ Môi trường phát triển không có điện thoại, nên các điểm này 
 ```
 src/config.ts          Thông tin của tiệm (file duy nhất cần sửa)
 src/site.ts            Dựng HTML trang + poster và file QR từ config (chạy lúc build)
+brand/logo-original.png Ảnh logo gốc chủ tiệm gửi (public/logo.png được tạo từ đây)
 src/lib/               wifi (chuỗi WIFI:), qr (ma trận + SVG), png (PNG in được), icons, html
-src/main.ts            JS tăng cường ~1 KB: sao chép mật khẩu, mở hướng dẫn
 scripts/serve.ts       Máy chủ tĩnh cho dist/ (dùng sau Cloudflare Tunnel): npm run serve
 src/styles/            base (màu, chữ), site (trang), poster (A4), fonts
 public/fonts/          Font tự host (Barlow Condensed, Be Vietnam Pro: subset latin + vietnamese)
@@ -168,7 +172,7 @@ PRODUCT.md, DESIGN.md  Ngữ cảnh sản phẩm và hệ thống thiết kế
 VERIFICATION.md        Báo cáo kiểm chứng: đã kiểm gì, kết quả, và những gì chưa kiểm được
 ```
 
-Dung lượng một lần mở trang khoảng 61 KB (HTML 3,4 KB, CSS 2,5 KB, JS 1 KB, 6 file font 55 KB; số liệu nén gzip, font vốn đã nén).
+Trang chủ không có JavaScript. Dung lượng một lần mở khoảng 59 KB (HTML 1,5 KB, CSS 2,1 KB, 6 file font 55 KB; số liệu nén gzip, font vốn đã nén).
 
 ## Giấy phép các thành phần
 

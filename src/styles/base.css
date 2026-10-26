@@ -67,43 +67,15 @@ a {
   white-space: nowrap;
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Tên hiệu: DISTRICT H trên, BARBERSHOP dàn đều đúng bằng chiều rộng dòng trên. */
-.wordmark {
-  display: inline-grid;
+/* Logo của tiệm: ảnh PNG nền trong suốt, màu ink; kích thước do từng trang đặt. */
+.logo {
   margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  line-height: 0.86;
-  text-transform: uppercase;
+  line-height: 0;
 }
 
-.wordmark__main {
-  font-size: clamp(3.6rem, 21vw, 6rem);
-  white-space: nowrap;
-}
-
-.wordmark__accent {
-  color: var(--bronze);
-}
-
-.wordmark__sub {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 0.7em;
-  font-size: clamp(0.95rem, 4.6vw, 1.4rem);
-  line-height: 1;
+.logo img {
+  display: block;
+  height: auto;
 }
 
 /* Bảng thông tin kiểu bảng giá: nhãn ... giá trị, nối bằng đường chấm. */
@@ -146,20 +118,4 @@ a {
   text-align: right;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
-}
-
-/* Màn hình hẹp (website): nhãn nằm trên giá trị, cả hai dòng giống nhau, tên mạng không bị rớt dòng lệch. */
-@media (max-width: 25.99rem) {
-  .page .menu__row {
-    display: block;
-  }
-
-  .page .menu dt::after {
-    display: none;
-  }
-
-  .page .menu dd {
-    margin-top: 0.1rem;
-    text-align: left;
-  }
 }

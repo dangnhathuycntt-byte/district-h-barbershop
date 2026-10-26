@@ -5,10 +5,8 @@
 
 export interface SiteConfig {
   shop: {
-    /** Tên đầy đủ, dùng cho tiêu đề trang và chân trang. */
+    /** Tên đầy đủ, dùng cho tiêu đề trang, chân trang và chữ thay thế của logo. */
     name: string
-    /** Tên hiệu: `main` + `accent` ghép thành dòng lớn (chữ `accent` màu đồng), `sub` là dòng nhỏ bên dưới. */
-    wordmark: { main: string; accent: string; sub: string }
     /** Lời chào ngắn ở đầu trang. */
     welcome: string
     /** Lời cảm ơn kín đáo ở chân trang. */
@@ -44,8 +42,7 @@ export interface SiteConfig {
 export const config: SiteConfig = {
   shop: {
     name: 'District H Barbershop',
-    wordmark: { main: 'DISTRICT', accent: 'H', sub: 'BARBERSHOP' },
-    welcome: 'Chào mừng bạn đến District H. Kết nối Wi-Fi, ghé nhóm Zalo hoặc xem đường đi ngay bên dưới.',
+    welcome: 'Chào mừng bạn đến District H. Ghé nhóm Zalo hoặc xem đường đi ngay bên dưới.',
     thanks: 'Cảm ơn bạn đã ghé tiệm.',
   },
   wifi: {

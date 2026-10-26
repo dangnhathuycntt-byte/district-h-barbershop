@@ -10,7 +10,7 @@
  */
 import { execFileSync, spawn } from 'node:child_process'
 import { createServer } from 'node:http'
-import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { extname, join, normalize, resolve } from 'node:path'
 import { buildQrAssets, checkConfig, config, posterNeedsSiteUrl } from '../src/site.ts'
@@ -170,10 +170,14 @@ try {
   fail((error as Error).message)
 }
 
-if (qrOnly) {
+function writeQrFiles(): void {
   rmSync(join(outDir, 'qr'), { recursive: true, force: true })
   mkdirSync(join(outDir, 'qr'), { recursive: true })
   for (const [name, asset] of buildQrAssets(config)) writeFileSync(join(outDir, name), asset.body)
+}
+
+if (qrOnly) {
+  writeQrFiles()
   console.log(`✓ Đã xuất mã QR vào ${join(outDir, 'qr')}${config.siteUrl ? '' : ' (chưa có mã website vì siteUrl còn trống)'}`)
   process.exit(0)
 }
@@ -192,7 +196,7 @@ try {
   execFileSync('npx', ['vite', 'build', '--outDir', buildDir, '--emptyOutDir', '--logLevel', 'warn'], {
     cwd: root,
     stdio: 'inherit',
-    env: process.env,
+    env: { ...process.env, DISTRICT_H_WITH_POSTER: '1' },
   })
 
   mkdirSync(outDir, { recursive: true })
@@ -206,8 +210,7 @@ try {
   }
   assertSingleA4Page(pdf)
 
-  rmSync(join(outDir, 'qr'), { recursive: true, force: true })
-  cpSync(join(buildDir, 'qr'), join(outDir, 'qr'), { recursive: true })
+  writeQrFiles()
 } finally {
   rmSync(buildDir, { recursive: true, force: true })
 }

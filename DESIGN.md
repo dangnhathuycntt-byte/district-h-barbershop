@@ -40,15 +40,6 @@ spacing:
   gap: "0.75rem"
   block: "2rem"
 components:
-  button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    typography: "{typography.label}"
-    rounded: "{rounded.sm}"
-    padding: "0.75rem 1.4rem"
-    height: "3.25rem"
-  button-primary-hover:
-    backgroundColor: "{colors.bronze-deep}"
   button-outline:
     backgroundColor: "transparent"
     textColor: "{colors.ink}"
@@ -59,17 +50,13 @@ components:
   button-outline-hover:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.paper}"
-  qr-tile:
-    backgroundColor: "{colors.qr-white}"
-    rounded: "0"
-    padding: "0.4rem"
 ---
 
 # Design System: District H Barbershop
 
 ## Overview
 
-Một thanh dao cạo thẳng: tối giản, nam tính, chỉ có chữ, đường kẻ mảnh và một điểm nhấn đồng. Trang được dùng trong vài giây, trên điện thoại, bởi khách đang ngồi chờ trong tiệm, nên mọi thứ phục vụ một việc: lấy Wi-Fi, rồi tuỳ chọn vào Zalo hoặc xem đường đi.
+Một thanh dao cạo thẳng: tối giản, nam tính, chỉ có logo của tiệm, chữ, đường kẻ mảnh và một điểm nhấn đồng. Trang được dùng trong vài giây, trên điện thoại, bởi khách đang ngồi chờ trong tiệm, nên mọi thứ phục vụ một việc: tuỳ chọn vào nhóm Zalo hoặc xem đường đi (Wi-Fi do mã QR trên poster lo, trang web không có).
 
 Màu nền off-white ấm, chữ gần đen và điểm nhấn đồng do **brief của chủ tiệm chỉ định** (trình dò Impeccable báo `cream-palette`; đây là chủ ý, không phải mặc định). Phần còn lại (chữ condensed đậm, đường kẻ, bảng thông tin kiểu bảng giá) được chọn để tránh bộ mặt "serif + kem + đất nung" quen thuộc.
 
@@ -77,24 +64,23 @@ Không có thẻ (card) làm khung trang, không gradient, không emoji, không 
 
 ## Colors
 
-- **Paper (#f3eee5)**: nền trang web. **White (#ffffff)** chỉ dùng cho poster và ô chứa mã QR, vì mã QR luôn là module đen thuần trên nền trắng.
+- **Paper (#f3eee5)**: nền trang web. **White (#ffffff)** chỉ dùng cho poster và nền mã QR, vì mã QR luôn là module đen thuần trên nền trắng.
 - **Ink (#17130f)**: chữ chính, nút chính, đường kẻ nhấn. **Ink-soft (#4b4339)** cho đoạn văn phụ (tương phản ~8:1 trên paper). **Muted (#6a5f52)** cho chú thích nhỏ (~5,4:1).
-- **Bronze (#8a5a24)**: duy nhất một điểm nhấn: chữ H trong tên hiệu, khung focus, số bước trên poster, dấu tick "đã sao chép". Tương phản ~5,1:1 trên paper nên dùng được cho chữ nhỏ. **Bronze-deep (#6b4418)** cho hover, liên kết tải về, chữ trạng thái.
+- **Bronze (#8a5a24)**: duy nhất một điểm nhấn: đường kẻ dưới lời chào, khung focus, khung và số bước trên poster. Tương phản ~5,1:1 trên paper nên dùng được cho chữ nhỏ. **Bronze-deep (#6b4418)** chỉ còn dùng cho chữ trong khung nháp của poster (khi chưa có `siteUrl`).
 - Quy tắc: không tô màu thương hiệu lên mã QR; không dùng đồng làm nền mảng lớn.
 
 ## Typography
 
-- **Barlow Condensed 700** (tự host, subset latin + vietnamese): tên hiệu, tiêu đề mục, số bước. Luôn in hoa. Tên hiệu: DISTRICT + H (chữ H đồng), dưới là BARBERSHOP dàn đều đúng bằng chiều rộng dòng trên (flex space-between theo từng chữ).
+- **Barlow Condensed 700** (tự host, subset latin + vietnamese): tiêu đề mục và số bước. Luôn in hoa.
 - **Be Vietnam Pro 400/600** (tự host): mọi nội dung còn lại. Họ chữ thiết kế riêng cho dấu tiếng Việt, nên dấu chồng (ờ, ể, ặ) không bị dính.
-- Thang: tên hiệu `clamp(3.6rem, 21vw, 6rem)`; tiêu đề mục 2rem; thân 1rem/1.6; chú thích 0,9 đến 0,95rem. Đoạn văn tối đa 38 đến 44ch. `text-wrap: pretty` cho đoạn, `balance` cho tiêu đề. "Wi-Fi" luôn được bọc `nowrap` để không bị ngắt ở dấu gạch.
+- Thang: tiêu đề mục 2rem; thân 1rem/1.6; chú thích 0,9 đến 0,95rem. Đoạn văn tối đa 38 đến 44ch. `text-wrap: pretty` cho đoạn, `balance` cho tiêu đề. "Wi-Fi" luôn được bọc `nowrap` để không bị ngắt ở dấu gạch.
 - Giá trị Wi-Fi dùng `tabular-nums` và `translate="no"`.
 
 ## Layout
 
 - Mobile trước: một cột `min(100% - 2.5rem, 30rem)`. Các mục là hàng ngăn bằng đường kẻ `1px` (`--line`), khoảng đệm dọc 2rem.
-- Từ 62rem: hai cột, tên hiệu bên trái (sticky), nội dung bên phải, chân trang trải cả hai cột.
-- Dưới ~26rem: bảng Wi-Fi xếp nhãn trên giá trị để tên mạng không rớt dòng lệch; từ 26rem trở lên nhãn và giá trị nằm cùng hàng, nối bằng đường chấm.
-- Poster A4 (210 x 297 mm): khung đồng 0,35mm cách mép 12mm; tên hiệu, rồi bước 1 (mã Wi-Fi to nhất, thông tin gõ tay bên dưới), rồi bước 2 (mã website). Các module đen của mã canh thẳng mép chữ, vùng yên tĩnh 4 module nằm ngoài mép cột.
+- Từ 62rem: hai cột, logo bên trái (sticky, rộng 20rem; điện thoại 15rem), nội dung bên phải, chân trang trải cả hai cột.
+- Poster A4 (210 x 297 mm): khung đồng 0,35mm cách mép 12mm; logo (cao 42mm, căn giữa), rồi bước 1 (mã Wi-Fi to nhất, thông tin gõ tay bên dưới), rồi bước 2 (mã website). Các module đen của mã canh thẳng mép chữ, vùng yên tĩnh 4 module nằm ngoài mép cột.
 
 ## Elevation & Depth
 
@@ -106,12 +92,11 @@ Góc gần vuông (`2px`), như lưỡi dao thẳng. Viền nút `1.5px`. Ô mã
 
 ## Components
 
-- **Nút chính** (`button-primary`): nền ink, chữ paper; hover/active chuyển sang bronze-deep. Dùng cho "Kết nối Wi-Fi". Cao 3,25rem (52px), căn trái, icon Lucide 1,25rem nét 2px.
-- **Nút viền** (`button-outline`): viền ink 1,5px, nền trong suốt; hover/active đảo màu. Dùng cho "Sao chép mật khẩu", "Tham gia nhóm Zalo", "Xem đường đi". Liên kết ngoài có thêm mũi tên ở cuối.
-- **Hướng dẫn tự nối Wi-Fi**: khối mở ngay dưới nút (không dùng modal), danh sách đánh số, số màu bronze-deep. Có JS thì thu gọn cho tới khi bấm; tắt JS thì luôn hiện.
-- **Mã QR Wi-Fi**: ô trắng, viền `--line`, đi kèm hai liên kết tải PNG/SVG.
+- **Nút viền** (`button-outline`): viền ink 1,5px, nền trong suốt; hover/active đảo màu. Dùng cho "Tham gia nhóm Zalo" và "Xem đường đi", là hai nút duy nhất của trang chủ. Cao 3,25rem (52px), căn trái, icon Lucide 1,25rem nét 2px; liên kết ngoài có thêm mũi tên ở cuối.
+- **Logo**: ảnh PNG nền trong suốt ở màu ink (`public/logo.png`), tạo từ ảnh logo trắng trên nền đen do chủ tiệm gửi (bản gốc ở `brand/logo-original.png`); không vẽ lại, không đổi tỷ lệ, không tô màu thương hiệu. Là tiêu đề `h1` của trang, chữ thay thế là tên tiệm.
+- **Mã QR** (chỉ có trên poster): module đen thuần trên nền trắng, không bo, không viền trang trí.
 - **Focus**: viền liền 3px bronze, cách 3px. **Chọn chữ**: nền bronze, chữ paper. Thanh cuộn, caret, accent-color đều theo bronze.
-- **Chuyển động**: một khoảnh khắc duy nhất khi mở trang (tên hiệu "trồi lên", đường kẻ vẽ ra, lời chào hiện dần), đường cong ease-out mũ, tắt hoàn toàn với `prefers-reduced-motion`. Nội dung luôn hiện sẵn nếu hoạt ảnh không chạy.
+- **Chuyển động**: một khoảnh khắc duy nhất khi mở trang (logo "trồi lên", đường kẻ vẽ ra, lời chào hiện dần), đường cong ease-out mũ, tắt hoàn toàn với `prefers-reduced-motion`. Nội dung luôn hiện sẵn nếu hoạt ảnh không chạy.
 
 ## Do's and Don'ts
 

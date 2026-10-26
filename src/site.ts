@@ -96,25 +96,23 @@ export function buildQrAssets(c: SiteConfig = config): Map<string, Asset> {
 /* Phần dùng chung                                                     */
 /* ------------------------------------------------------------------ */
 
-function wordmark(c: SiteConfig, extraClass = ''): string {
-  const { main, accent, sub } = c.shop.wordmark
-  const letters = [...sub].map((ch) => `<span>${esc(ch)}</span>`).join('')
+/** Logo của tiệm (public/logo.png, tạo từ brand/logo-original.png; xem README): đường dẫn tương đối để chạy được ở mọi thư mục gốc. */
+const LOGO_SIZE = { width: 632, height: 550 }
+
+function logo(c: SiteConfig, extraClass = ''): string {
   return (
-    `<h1 class="wordmark ${extraClass}">` +
-    `<span class="sr-only">${esc(c.shop.name)}</span>` +
-    `<span class="wordmark__main" aria-hidden="true">${esc(main)} <span class="wordmark__accent">${esc(accent)}</span></span>` +
-    `<span class="wordmark__sub" aria-hidden="true">${letters}</span>` +
+    `<h1 class="logo ${extraClass}">` +
+    `<img src="logo.png" alt="${esc(c.shop.name)}" width="${LOGO_SIZE.width}" height="${LOGO_SIZE.height}">` +
     `</h1>`
   )
 }
 
 /** Tên mạng / mật khẩu: giữ nguyên chữ, tắt dịch tự động của trình duyệt. */
-function credentials(c: SiteConfig, ids = true): string {
-  const id = (name: string) => (ids ? ` id="${name}"` : '')
+function credentials(c: SiteConfig): string {
   return (
     `<dl class="menu">` +
-    `<div class="menu__row"><dt>Tên mạng</dt><dd${id('wifi-ssid')} translate="no">${esc(c.wifi.ssid)}</dd></div>` +
-    `<div class="menu__row"><dt>Mật khẩu</dt><dd${id('wifi-password')} class="menu__secret" translate="no">${esc(c.wifi.password)}</dd></div>` +
+    `<div class="menu__row"><dt>Tên mạng</dt><dd translate="no">${esc(c.wifi.ssid)}</dd></div>` +
+    `<div class="menu__row"><dt>Mật khẩu</dt><dd class="menu__secret" translate="no">${esc(c.wifi.password)}</dd></div>` +
     `</dl>`
   )
 }
@@ -124,13 +122,13 @@ function credentials(c: SiteConfig, ids = true): string {
 /* ------------------------------------------------------------------ */
 
 function homeHead(c: SiteConfig): string {
-  const title = `${c.shop.name} · Wi-Fi, nhóm Zalo, đường đi`
-  const description = `Kết nối Wi-Fi, tham gia nhóm Zalo và xem đường đi đến ${c.shop.name}.`
+  const title = `${c.shop.name} · Nhóm Zalo, đường đi`
+  const description = `Tham gia nhóm Zalo và xem đường đi đến ${c.shop.name}.`
   const url = c.siteUrl ? `<link rel="canonical" href="${esc(c.siteUrl)}"><meta property="og:url" content="${esc(c.siteUrl)}">` : ''
   return [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}">`,
-    // Trang có mật khẩu Wi-Fi công khai: không cho công cụ tìm kiếm lập chỉ mục.
+    // Trang đích của mã QR, không có nhu cầu xuất hiện trên công cụ tìm kiếm.
     `<meta name="robots" content="noindex, nofollow">`,
     `<meta name="theme-color" content="#f3eee5">`,
     `<meta property="og:type" content="website">`,
@@ -141,61 +139,21 @@ function homeHead(c: SiteConfig): string {
 }
 
 function homeBody(c: SiteConfig): string {
-  const wifi = qrMatrix(wifiPayload(c.wifi))
-  const wifiSvg = qrSvg(wifi, {
-    light: '#fff',
-    label: `Mã QR Wi-Fi ${c.wifi.ssid}`,
-    className: 'qr__svg',
-  })
   const external = `target="_blank" rel="noopener noreferrer"`
 
   return `
     <div class="page">
       <header class="masthead">
-        ${wordmark(c)}
+        ${logo(c)}
         <p class="welcome">${prose(c.shop.welcome)}</p>
         <span class="rule" aria-hidden="true"></span>
       </header>
 
       <main class="content">
-        <section class="block" aria-labelledby="wifi-title">
-          <h2 class="block__title" id="wifi-title">Wi-Fi</h2>
-          ${credentials(c)}
-          <div class="actions">
-            <button type="button" class="btn btn--primary" data-connect aria-expanded="false" aria-controls="connect-guide">
-              ${icon('wifi')}<span>Kết nối Wi-Fi</span>
-            </button>
-            <button type="button" class="btn" data-copy data-label-done="Đã sao chép">
-              ${icon('copy', 'icon icon--idle')}${icon('check', 'icon icon--done')}<span data-copy-label>Sao chép mật khẩu</span>
-            </button>
-          </div>
-          <p class="status" role="status" aria-live="polite" data-status></p>
-          <div class="guide" id="connect-guide">
-            <p>Trang web không thể tự nối điện thoại vào ${WIFI}, nên bạn chọn mạng theo các bước sau:</p>
-            <ol>
-              <li>Mở <strong>Cài đặt</strong>, vào mục <strong>${WIFI}</strong>.</li>
-              <li>Chọn mạng <strong translate="no">${esc(c.wifi.ssid)}</strong>.</li>
-              <li>Nhập hoặc dán mật khẩu rồi nhấn <strong>Kết nối</strong>.</li>
-            </ol>
-          </div>
-          <div class="qr">
-            <div class="qr__frame">${wifiSvg}</div>
-            <div class="qr__text">
-              <h3>Mã QR ${WIFI}</h3>
-              <p>Quét bằng camera của một điện thoại khác để vào mạng ngay.</p>
-              <p class="qr__downloads">
-                <a href="${WIFI_QR_BASENAME}.png" download>${icon('download')}Tải PNG</a>
-                <a href="${WIFI_QR_BASENAME}.svg" download>${icon('download')}Tải SVG</a>
-              </p>
-            </div>
-            <p class="qr__note">Một số điện thoại cần quét mã ${WIFI} mới vào được mạng. Nếu không quét được, hãy chọn mạng và nhập mật khẩu bằng tay.</p>
-          </div>
-        </section>
-
         <section class="block" aria-labelledby="zalo-title">
           <h2 class="block__title" id="zalo-title">Nhóm Zalo</h2>
           <p>Tham gia nhóm Zalo của District H để nhận thông tin từ tiệm. Việc tham gia hoàn toàn tự nguyện, bạn có thể bỏ qua.</p>
-          <div class="actions actions--single">
+          <div class="actions">
             <a class="btn" href="${esc(c.links.zalo)}" ${external}>
               ${icon('users')}<span>Tham gia nhóm Zalo</span>${icon('arrow-up-right', 'icon icon--trail')}
             </a>
@@ -205,7 +163,7 @@ function homeBody(c: SiteConfig): string {
         <section class="block" aria-labelledby="map-title">
           <h2 class="block__title" id="map-title">Đường đi</h2>
           <p>Mở Google Maps để xem đường đến ${esc(c.shop.name)}.</p>
-          <div class="actions actions--single">
+          <div class="actions">
             <a class="btn" href="${esc(c.links.maps)}" ${external}>
               ${icon('map-pin')}<span>Xem đường đi</span>${icon('arrow-up-right', 'icon icon--trail')}
             </a>
@@ -256,7 +214,7 @@ function posterBody(c: SiteConfig): string {
           <p>Mở camera điện thoại, hướng vào mã rồi chạm vào thông báo hiện ra để tham gia mạng. Mã này dùng được cả khi điện thoại chưa có internet.</p>
         </div>
         <div class="step__creds">
-          ${credentials(c, false)}
+          ${credentials(c)}
           <p class="step__note">Không quét được? Chọn đúng tên mạng và nhập mật khẩu ở trên.</p>
         </div>
       </section>`
@@ -275,7 +233,7 @@ function posterBody(c: SiteConfig): string {
   return `
     <div class="sheet">
       <div class="frame">
-        <header class="poster-head">${wordmark(c, 'wordmark--poster')}</header>
+        <header class="poster-head">${logo(c, 'logo--poster')}</header>
         <main class="steps">${steps.join('\n')}</main>
         <footer class="poster-foot"><p>${esc(c.shop.name)} · ${esc(c.shop.thanks)}</p></footer>
       </div>

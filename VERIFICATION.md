@@ -10,12 +10,31 @@ Ngày 26/10/2026, macOS, Node 22.23.2, Vite 8.3.5, TypeScript 7.0.2. Kiểm tra 
 | `vite build` (build sạch từ đầu) | Đạt, 7 module, 77 ms |
 | Config sai (mật khẩu < 8 ký tự, link `http`) | Build **thất bại** với mã thoát 1 và thông báo tiếng Việt, nên CI không deploy bản hỏng |
 | Responsive (rộng 320, 360, 390, 412, 430, 768, 1440 px) | Không tràn ngang ở mọi cỡ (đo `scrollWidth - clientWidth = 0`) |
-| axe-core 4.10.2 (WCAG 2.0/2.1/2.2 A+AA + best-practice) | **0 vi phạm** ở 3 trạng thái: mobile đóng, mobile mở hướng dẫn, desktop |
+| axe-core 4.10.2 (WCAG 2.0/2.1/2.2 A+AA + best-practice) | **0 vi phạm** ở 3 trạng thái, đo trên trang chủ **cũ (còn mục Wi-Fi)**. **Chưa chạy lại** sau khi gỡ mục Wi-Fi (xem mục Thay đổi ngày 26/10) |
 | Bàn phím | Thứ tự Tab hợp lý (6 điều khiển), khung focus bronze 3px, Enter mở hướng dẫn |
-| Tắt JavaScript | Mật khẩu, mã QR, liên kết và hướng dẫn vẫn hiện; nút chỉ-JS được ẩn |
-| Tải trang | ~61 KB (HTML 3,4 KB, CSS 2,5 KB, JS 1,0 KB, 6 font 55 KB; gzip), **0 request tới bên thứ ba** |
+| Tắt JavaScript | Trang chủ hiện không còn JavaScript nào (0 thẻ `<script>`), nên mục này không còn áp dụng |
+| Tải trang | ~59 KB (HTML 1,5 KB, CSS 2,1 KB, 6 font 55 KB; gzip; không JS). Trong HTML chỉ có 2 liên kết ngoài (Zalo, Google Maps) và địa chỉ canonical của chính trang |
 | Giải mã QR | Xem bên dưới |
 | Poster PDF | Đúng 1 trang A4 (210 × 297 mm); script chặn xuất nếu không phải 1 trang A4 |
+
+## Thay đổi ngày 26/10: gỡ mục Wi-Fi khỏi trang chủ, thêm logo, bỏ poster.html khỏi bản đăng
+
+Theo yêu cầu của chủ tiệm, trang chủ không còn mục Wi-Fi (tên mạng, mật khẩu, nút Kết nối Wi-Fi, Sao chép mật khẩu, hướng dẫn, mã QR và hai liên kết tải). Mã QR Wi-Fi giờ chỉ có ở `print/qr/` và trên poster. Cùng ngày, chủ tiệm gửi ảnh logo và giao mình tự quyết cách dùng: logo thay tên hiệu bằng chữ ở đầu trang chủ và đầu poster (file `public/logo.png`, tạo từ ảnh gốc `brand/logo-original.png`), và trang xem thử poster `poster.html` **không còn được đăng** cùng website (chỉ dựng khi `npm run print`). Các mục bên dưới nhắc tới những phần này mô tả **bản trước thay đổi**; mục này là bản hiện tại.
+
+Đã kiểm lại trên bản mới:
+
+- `tsc --noEmit` và `vite build` đạt. Bản build **không còn** thư mục `qr/`, **không còn** thẻ `<script>`, và HTML trang chủ không chứa chữ Wi-Fi, tên mạng hay mật khẩu.
+- Bản đang chạy tại `districth.dixxie.store`: tiêu đề mới (Nhóm Zalo, đường đi); `/qr/district-h-wifi-qr.png` và `/poster.html` đều trả **404**; `/logo.png` trả 200; không có thẻ Cloudflare Analytics.
+- Trình duyệt, rộng 390 px và 1440 px (trang có logo): không tràn ngang (đo `scrollWidth - clientWidth = 0`); logo nạp được (`naturalWidth > 0`); chỉ còn 2 liên kết (Zalo, Google Maps); đã xem ảnh chụp bố cục. Ở 390 px nút Zalo nằm trong màn hình đầu tiên (cao 844 px).
+- `npm run print` chạy lại (đường xuất QR đã đổi sang ghi file trực tiếp thay vì chép từ bản build): poster vẫn đúng 1 trang A4; 4 file QR giải ra đúng bằng jsQR (đầy đủ và thu nhỏ 25%); Apple Vision đọc đủ 2 mã từ PDF (Wi-Fi ~66 mm, website ~41 mm). Các file QR xuất ra không khác bản đã commit (git không báo thay đổi). Poster có logo (cao 42 mm, căn giữa đầu trang) vẫn vừa 1 trang A4 và đã xem ảnh poster dựng lại ở 300 dpi.
+
+**Chưa làm / còn lại:**
+
+- **axe-core chưa chạy lại** trên trang chủ mới. Trang chỉ còn một phần nhỏ của trang đã đạt (tiêu đề, 2 nút liên kết, chân trang) nên rủi ro thấp, nhưng chưa có số liệu.
+- Bản dự phòng GitHub Pages **chưa được cập nhật** vì thay đổi chưa commit/push; nó vẫn là trang cũ có mục Wi-Fi cho tới khi đẩy lên.
+- Mật khẩu vẫn nằm trong repo công khai (`src/config.ts` và `print/poster-a4.pdf` đã commit) và trên poster in trong tiệm.
+- **Logo chỉ có dạng ảnh điểm** (632 × 550 px, tạo từ ảnh gửi qua chat). In poster ở cỡ hiện tại (cao 42 mm) tương đương ~330 dpi nên đủ nét; in lớn hơn nhiều thì cần file vector từ người thiết kế logo. Chưa kiểm logo in thật trên giấy.
+- Chưa có favicon từ logo (favicon vẫn là biểu tượng cũ).
 
 ## Mã QR
 
@@ -26,7 +45,7 @@ Chuỗi Wi-Fi mong đợi: `WIFI:T:WPA;S:<tên mạng>;P:<mật khẩu>;;`, vớ
 - **Apple Vision** (cùng họ bộ đọc Camera iPhone) đọc **trực tiếp file PDF poster ở 300 dpi**: tìm thấy đủ 2 mã, mã Wi-Fi vùng module rộng ~66 mm, mã website ~41 đến 42 mm, cả hai ra đúng nội dung.
 - Mã website chỉ được tạo **sau khi** địa chỉ deploy trả 200 (poster cuối dùng `https://districth.dixxie.store/`; lần xuất trước dùng địa chỉ GitHub Pages). Trước đó, pipeline poster được thử bằng địa chỉ tạm `https://district-h-test.invalid/` (đuôi `.invalid` dành riêng cho thử nghiệm, không nằm trong sản phẩm).
 - Poster cuối `print/poster-a4.pdf`: Vision đọc ra cả hai mã, mã website ~42 mm, đúng địa chỉ trên.
-- Tải mã QR trực tiếp từ bản **đang chạy trên GitHub Pages** rồi giải mã lại bằng jsQR: khớp ở kích thước đầy đủ và thu nhỏ 25%.
+- (Bản trước 26/10; hiện website không còn đăng file QR để tải.) Tải mã QR trực tiếp từ bản **đang chạy trên GitHub Pages** rồi giải mã lại bằng jsQR: khớp ở kích thước đầy đủ và thu nhỏ 25%.
 - Mã 33×33 module (Wi-Fi), ECC mức M, vùng yên tĩnh 4 module, module đen thuần trên nền trắng.
 
 ## Triển khai và bản đang chạy

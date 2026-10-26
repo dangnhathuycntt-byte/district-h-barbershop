@@ -6,7 +6,7 @@ type Site = typeof import('./src/site.ts')
 /**
  * Dựng trang từ src/config.ts:
  *  - thay <!--head--> và <!--app--> trong index.html / poster.html bằng HTML đã render sẵn,
- *  - tạo các file mã QR (qr/*.png, qr/*.svg) khi build, và phục vụ chúng khi chạy dev.
+ * File mã QR không được phát hành cùng website: chúng được xuất riêng bằng `npm run qr` / `npm run print`.
  */
 function districtH(): Plugin {
   let server: ViteDevServer | undefined
@@ -20,14 +20,6 @@ function districtH(): Plugin {
 
     configureServer(s) {
       server = s
-      s.middlewares.use(async (req, res, next) => {
-        const path = (req.url ?? '').split('?')[0]!.replace(/^\//, '')
-        if (!path.startsWith('qr/')) return next()
-        const asset = (await loadSite()).buildQrAssets().get(path)
-        if (!asset) return next()
-        res.setHeader('Content-Type', asset.type)
-        res.end(asset.body)
-      })
     },
 
     handleHotUpdate({ file, server: s }) {
@@ -42,15 +34,12 @@ function districtH(): Plugin {
       const { head, body } = renderPage(ctx.filename.endsWith('poster.html') ? 'poster' : 'home')
       return html.replace('<!--head-->', head).replace('<!--app-->', body)
     },
-
-    async generateBundle() {
-      const { buildQrAssets } = await loadSite()
-      for (const [fileName, asset] of buildQrAssets()) {
-        this.emitFile({ type: 'asset', fileName, source: asset.body })
-      }
-    },
   }
 }
+
+// Trang poster có tên mạng và mật khẩu Wi-Fi nên chỉ được dựng khi in (`npm run print`), không đăng cùng website.
+// Khi chạy `npm run dev`, /poster.html vẫn mở được để xem thử.
+const withPoster = process.env.DISTRICT_H_WITH_POSTER === '1'
 
 export default defineConfig({
   // Đường dẫn tương đối: chạy được trên GitHub Pages (kể cả thư mục con), Cloudflare Pages, tên miền riêng.
@@ -61,7 +50,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(import.meta.dirname, 'index.html'),
-        poster: resolve(import.meta.dirname, 'poster.html'),
+        ...(withPoster && { poster: resolve(import.meta.dirname, 'poster.html') }),
       },
     },
   },

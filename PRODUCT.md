@@ -16,7 +16,7 @@ Customers of District H Barbershop, on their own smartphones, sitting in or ente
 
 ## Product Purpose
 
-Get a customer onto the shop Wi-Fi without asking staff, then offer two optional next steps: joining the shop's Zalo group and opening directions to the shop in Google Maps. Success: a customer is connected within seconds, and joining Zalo is clearly voluntary.
+Get a customer onto the shop Wi-Fi without asking staff (the Wi-Fi QR on the poster does this; the website does not carry Wi-Fi), then offer two optional next steps on the website: joining the shop's Zalo group and opening directions to the shop in Google Maps. Success: a customer is connected within seconds, and joining Zalo is clearly voluntary.
 
 ## Positioning
 
@@ -30,20 +30,20 @@ A single understated page and one printed poster that belong to one specific sho
 
 ## Capabilities and Constraints
 
-- Business facts live in one config file. Wi-Fi SSID `District H barbershop 5g`, password shown openly on the page and poster (the brief requires it).
-- Never claim the page connects a device to Wi-Fi. "Kết nối Wi-Fi" copies the password and opens manual-connect guidance.
+- Business facts live in one config file. Wi-Fi SSID `District H barbershop 5g`, password printed on the poster (the brief requires it). The home page no longer shows Wi-Fi details or offers the Wi-Fi QR for download (user decision 2026-10-26); the QR is delivered to the owner as a file.
+- Never claim the page connects a device to Wi-Fi; the page has no Wi-Fi controls at all.
 - No analytics, tracking, cookie banner, backend, or third-party QR service (the password must not leave the device).
-- Page is `noindex` so search engines do not index a public Wi-Fi password.
+- Pages are `noindex`: they are QR landing pages, and the poster preview page still carries the Wi-Fi password.
 - The final site URL is unknown until deploy; it must never be invented. The website QR is generated only once `siteUrl` is set.
 - Open: the custom domain (user will provide).
 
 ## Brand Commitments
 
-Name: District H Barbershop (wordmark: DISTRICT H / BARBERSHOP). Brief-pinned look: premium, masculine, minimalist editorial; warm off-white ground, near-black type, subtle bronze accent; correct Vietnamese typography.
+Name: District H Barbershop. The shop's own logo (circle with an H, serif DISTRICT H / BARBERSHOP, supplied by the owner) is the masthead on the page and the poster, set in the page ink color. Brief-pinned look: premium, masculine, minimalist editorial; warm off-white ground, near-black type, subtle bronze accent; correct Vietnamese typography.
 
 ## Evidence on Hand
 
-Real data only: shop name, Wi-Fi SSID and password, Zalo group link `https://zalo.me/g/qblcao077`, Google Maps link `https://maps.app.goo.gl/z6VG47DSj9sHhTM7A?g_st=iz`. No logo file, photos, address text, opening hours, prices, or testimonials were provided, and none may be invented.
+Real data only: shop name, Wi-Fi SSID and password, Zalo group link `https://zalo.me/g/qblcao077`, Google Maps link `https://maps.app.goo.gl/z6VG47DSj9sHhTM7A?g_st=iz`. The owner's logo image (white on black, received in chat 2026-10-26, kept at `brand/logo-original.png`). No photos, address text, opening hours, prices, or testimonials were provided, and none may be invented.
 
 ## Product Principles
 

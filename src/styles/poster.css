@@ -57,15 +57,14 @@ body {
 
 /* ---------- Tên hiệu ---------- */
 
-.wordmark--poster .wordmark__main {
-  font-size: 33mm;
-  animation: none;
+.poster-head {
+  display: flex;
+  justify-content: center;
 }
 
-.wordmark--poster .wordmark__sub {
-  margin-top: 5mm;
-  font-size: 7.4mm;
-  animation: none;
+.logo--poster img {
+  height: 42mm;
+  width: auto;
 }
 
 /* ---------- Các bước ---------- */
