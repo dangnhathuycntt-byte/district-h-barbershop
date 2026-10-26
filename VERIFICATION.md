@@ -31,7 +31,7 @@ Theo yêu cầu của chủ tiệm, trang chủ không còn mục Wi-Fi (tên m�
 **Chưa làm / còn lại:**
 
 - **axe-core chưa chạy lại** trên trang chủ mới. Trang chỉ còn một phần nhỏ của trang đã đạt (tiêu đề, 2 nút liên kết, chân trang) nên rủi ro thấp, nhưng chưa có số liệu.
-- Bản dự phòng GitHub Pages **chưa được cập nhật** vì thay đổi chưa commit/push; nó vẫn là trang cũ có mục Wi-Fi cho tới khi đẩy lên.
+- Bản dự phòng GitHub Pages đã cập nhật theo commit `6d4b321` (workflow xanh): trang chủ mới 200, `/logo.png` 200, `/poster.html` và `/qr/district-h-wifi-qr.png` đều 404.
 - Mật khẩu vẫn nằm trong repo công khai (`src/config.ts` và `print/poster-a4.pdf` đã commit) và trên poster in trong tiệm.
 - **Logo chỉ có dạng ảnh điểm** (632 × 550 px, tạo từ ảnh gửi qua chat). In poster ở cỡ hiện tại (cao 42 mm) tương đương ~330 dpi nên đủ nét; in lớn hơn nhiều thì cần file vector từ người thiết kế logo. Chưa kiểm logo in thật trên giấy.
 - Chưa có favicon từ logo (favicon vẫn là biểu tượng cũ).
