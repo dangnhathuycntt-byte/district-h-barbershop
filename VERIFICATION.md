@@ -24,7 +24,7 @@ Chuỗi Wi-Fi mong đợi: `WIFI:T:WPA;S:<tên mạng>;P:<mật khẩu>;;`, vớ
 - **jsQR** giải file PNG (`print/qr/district-h-wifi-qr.png`, 1230×1230 px) ra đúng từng ký tự, ở kích thước đầy đủ **và** khi thu nhỏ còn ~25% (mô phỏng quét từ xa).
 - Đọc ngược chuỗi bằng bộ phân tích độc lập: tên mạng và mật khẩu đọc ngược ra đúng bằng giá trị trong config.
 - **Apple Vision** (cùng họ bộ đọc Camera iPhone) đọc **trực tiếp file PDF poster ở 300 dpi**: tìm thấy đủ 2 mã, mã Wi-Fi vùng module rộng ~66 mm, mã website ~41 đến 42 mm, cả hai ra đúng nội dung.
-- Mã website chỉ được tạo **sau khi** địa chỉ deploy trả 200: `https://dangnhathuycntt-byte.github.io/district-h-barbershop/`. Trước đó, pipeline poster được thử bằng địa chỉ tạm `https://district-h-test.invalid/` (đuôi `.invalid` dành riêng cho thử nghiệm, không nằm trong sản phẩm).
+- Mã website chỉ được tạo **sau khi** địa chỉ deploy trả 200 (poster cuối dùng `https://districth.dixxie.store/`; lần xuất trước dùng địa chỉ GitHub Pages). Trước đó, pipeline poster được thử bằng địa chỉ tạm `https://district-h-test.invalid/` (đuôi `.invalid` dành riêng cho thử nghiệm, không nằm trong sản phẩm).
 - Poster cuối `print/poster-a4.pdf`: Vision đọc ra cả hai mã, mã website ~42 mm, đúng địa chỉ trên.
 - Tải mã QR trực tiếp từ bản **đang chạy trên GitHub Pages** rồi giải mã lại bằng jsQR: khớp ở kích thước đầy đủ và thu nhỏ 25%.
 - Mã 33×33 module (Wi-Fi), ECC mức M, vùng yên tĩnh 4 module, module đen thuần trên nền trắng.
@@ -34,7 +34,15 @@ Chuỗi Wi-Fi mong đợi: `WIFI:T:WPA;S:<tên mạng>;P:<mật khẩu>;;`, vớ
 - Repo công khai `dangnhathuycntt-byte/district-h-barbershop`; workflow GitHub Pages chạy xanh 2 lần (build trên Ubuntu/Node 22: `npm ci`, `tsc`, `vite build`; deploy 8 đến 11 s).
 - Địa chỉ `https://dangnhathuycntt-byte.github.io/district-h-barbershop/` trả 200; trang chủ, `poster.html`, file QR PNG/SVG, font, CSS, `favicon.svg`, `robots.txt` đều 200 đúng loại tệp.
 - Trên bản live: có `canonical` và `og:url` đúng địa chỉ, `noindex`, không tràn ngang ở 390 px, đủ 6 font đã nạp, nút sao chép ghi đủ 13 ký tự vào clipboard, **chỉ một nguồn request (chính trang)**, 0 cảnh báo/lỗi console.
-- Chưa gắn tên miền riêng. Khi đổi sang tên miền khác, `siteUrl` đổi và phải in lại poster (xem README).
+- GitHub Pages nay là bản dự phòng; địa chỉ chính là `districth.dixxie.store` (mục dưới). Khi đổi tên miền, `siteUrl` đổi và phải in lại poster (xem README).
+
+## Triển khai chính: Cloudflare Tunnel (`districth.dixxie.store`)
+
+- Dịch vụ nền `com.districth.site` phục vụ `dist/` ở `127.0.0.1:3020`. Máy chủ tĩnh được thử trước trên cổng tạm: 404 cho `/qr/`, `/assets/`, `..%2f`, `%00`, `/..`; 405 cho POST; có `nosniff` và `X-Robots-Tag: noindex`.
+- Cấu hình tunnel được sao lưu, kiểm tra bằng `cloudflared tunnel ingress validate` rồi mới khởi động lại. Trước và sau khi khởi động lại, các tên miền phụ khác giữ nguyên kết quả (`chamcong` 502 từ trước do dịch vụ ở cổng 3002 không chạy, `tm1400` 200, `rbx` 404).
+- `https://districth.dixxie.store/`: HTTP/2 200; trang chủ, `poster.html`, file QR PNG/SVG, font, `favicon.svg`, `robots.txt` đều 200 đúng loại tệp; chứng chỉ TLS hợp lệ (hết hạn 03/12/2026, Cloudflare tự gia hạn).
+- **Phát hiện và sửa:** lần tải đầu qua Cloudflare có thêm request tới `static.cloudflareinsights.com`: Cloudflare tự chèn thẻ Web Analytics ở edge cho cả zone `dixxie.store`, không phải code của dự án. Tài liệu Cloudflare nêu rằng header `Cache-Control` có `no-transform` ngăn việc chèn này; sau khi thêm vào máy chủ, đo lại trong trình duyệt chỉ còn **một nguồn request (chính trang)**, thẻ không còn trong DOM, 0 cảnh báo console. Việc này chỉ áp dụng cho tên miền phụ này; cài đặt analytics ở cấp zone của bạn không bị đổi.
+- Mã QR cuối được tạo **sau khi** địa chỉ trả 200 và sạch: Vision đọc ra cả hai mã từ `print/poster-a4.pdf` (Wi-Fi ~66 mm, website ~41 mm); mã PNG tải về từ chính tên miền mới cũng giải ra đúng.
 
 ## Liên kết
 
@@ -56,6 +64,7 @@ Ghi chú: một ảnh chụp desktop ban đầu cho thấy hướng dẫn tự m
 ## Chưa được kiểm chứng
 
 - **Quét thật bằng iPhone và Android** (có hiện "Tham gia mạng", có vào được mạng 5 GHz). Mọi thiết bị đều cần người dùng chạm xác nhận một lần; không máy nào tự nối khi chỉ quét.
+- Máy này tự chạy lại dịch vụ sau khi khởi động lại/ngủ/mất mạng (cấu hình `RunAtLoad` + `KeepAlive` đã có nhưng **chưa thử khởi động lại máy**) và độ ổn định khi dùng làm máy chủ liên tục.
 - Hành vi mở nhóm Zalo (đã/chưa cài Zalo) và khả năng nhóm còn nhận người.
 - Quét từ tờ in thật ở khoảng 1 m.
 - Đọc màn hình thật (VoiceOver/TalkBack) và chế độ `prefers-reduced-motion` (chỉ đọc từ CSS, chưa chạy giả lập).

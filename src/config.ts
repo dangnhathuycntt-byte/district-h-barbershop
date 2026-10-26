@@ -57,7 +57,7 @@ export const config: SiteConfig = {
     zalo: 'https://zalo.me/g/qblcao077',
     maps: 'https://maps.app.goo.gl/z6VG47DSj9sHhTM7A?g_st=iz',
   },
-  siteUrl: 'https://dangnhathuycntt-byte.github.io/district-h-barbershop/',
+  siteUrl: 'https://districth.dixxie.store/',
   poster: {
     qrCodes: ['wifi', 'site'],
   },

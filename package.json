@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "verify:qr": "node scripts/verify-qr.ts",
     "print": "node scripts/export-print.ts",
-    "qr": "node scripts/export-print.ts --qr-only"
+    "qr": "node scripts/export-print.ts --qr-only",
+    "serve": "node scripts/serve.ts"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

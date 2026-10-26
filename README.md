@@ -72,9 +72,31 @@ DISTRICT_H_SITE_URL=https://dia-chi-tam.example/ npm run print -- --out /tmp/xem
 
 Chuỗi `WIFI:T:WPA;S:<tên mạng>;P:<mật khẩu>;;` theo quy ước ZXing, được iOS Camera (11+) và Camera/Google Lens trên Android đọc. Ký tự `\ ; , : "` được escape; mật khẩu hoặc tên mạng chỉ gồm 0–9/a–f được bọc ngoặc kép để máy không hiểu nhầm là mã hex.
 
+## Đang chạy: Cloudflare Tunnel trên máy này
+
+Địa chỉ chính (poster và mã QR website trỏ về đây): **https://districth.dixxie.store/**
+
+```
+Điện thoại → Cloudflare → tunnel `dashboard-chamcong` → http://127.0.0.1:3020 → scripts/serve.ts → dist/
+```
+
+- `scripts/serve.ts` phục vụ thư mục `dist/` (không liệt kê thư mục, không đọc ra ngoài `dist/`, có `X-Robots-Tag: noindex`), chạy nền bằng LaunchAgent `~/Library/LaunchAgents/com.districth.site.plist` (tự chạy lại khi bị tắt).
+- Tunnel có quy tắc `districth.dixxie.store → http://127.0.0.1:3020` trong `~/.cloudflared/config.yml` (bản sao lưu trước khi sửa: `config.yml.bak-20261026`); bản ghi DNS tạo bằng `cloudflared tunnel route dns`.
+- **Cập nhật nội dung:** sửa `src/config.ts` rồi `npm run build`. Máy chủ đọc `dist/` theo từng yêu cầu nên không cần khởi động lại. Nếu đổi `siteUrl`/Wi-Fi thì chạy thêm `npm run print` và in lại poster.
+- **Vận hành:**
+  ```bash
+  launchctl kickstart -k gui/$(id -u)/com.districth.site    # khởi động lại máy chủ tĩnh
+  launchctl bootout gui/$(id -u)/com.districth.site         # dừng và gỡ
+  tail ~/Library/Logs/com.districth.site.err.log            # xem lỗi
+  launchctl kickstart -k gui/$(id -u)/com.cloudflare.cloudflared   # khởi động lại tunnel sau khi sửa config.yml (làm gián đoạn vài giây mọi tên miền phụ dùng chung tunnel)
+  ```
+- **`no-transform`:** máy chủ gửi `Cache-Control: ..., no-transform` ở mọi phản hồi. Nếu thiếu, Cloudflare tự chèn thẻ Web Analytics (`static.cloudflareinsights.com`) vào mọi trang của tên miền `dixxie.store`, trái với cam kết không analytics của trang này. Header cũng giữ ảnh mã QR không bị các bộ tối ưu ảnh của Cloudflare làm mờ.
+- **Lưu ý độ sẵn sàng:** trang chỉ mở được khi máy này đang bật, đã đăng nhập, không ngủ và có mạng (LaunchAgent chỉ chạy sau khi đăng nhập). Mã **Wi-Fi** trên poster không phụ thuộc trang này nên vẫn dùng được; chỉ bước 2 (Zalo, đường đi) bị ảnh hưởng. Bản dự phòng GitHub Pages vẫn chạy nhưng poster không trỏ tới nó.
+- Gỡ bỏ: `launchctl bootout` như trên, xoá quy tắc `districth.dixxie.store` trong `config.yml`, khởi động lại tunnel, rồi xoá bản ghi CNAME `districth` trên Cloudflare.
+
 ## Triển khai (GitHub Pages)
 
-**Hiện tại đang chạy tại** `https://dangnhathuycntt-byte.github.io/district-h-barbershop/` (repo công khai `dangnhathuycntt-byte/district-h-barbershop`); `siteUrl` và `print/poster-a4.pdf` đã dùng địa chỉ này. Các bước dưới đây là cách làm lại từ đầu hoặc chuyển sang nơi khác.
+GitHub Pages hiện là **bản dự phòng**: `https://dangnhathuycntt-byte.github.io/district-h-barbershop/` (repo công khai `dangnhathuycntt-byte/district-h-barbershop`, tự deploy khi push lên `main`). Địa chỉ chính in trên poster là tên miền ở mục trên.
 
 Repo đã có workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml): đẩy code lên nhánh `main` là tự build và đăng lên GitHub Pages.
 
@@ -137,6 +159,7 @@ src/config.ts          Thông tin của tiệm (file duy nhất cần sửa)
 src/site.ts            Dựng HTML trang + poster và file QR từ config (chạy lúc build)
 src/lib/               wifi (chuỗi WIFI:), qr (ma trận + SVG), png (PNG in được), icons, html
 src/main.ts            JS tăng cường ~1 KB: sao chép mật khẩu, mở hướng dẫn
+scripts/serve.ts       Máy chủ tĩnh cho dist/ (dùng sau Cloudflare Tunnel): npm run serve
 src/styles/            base (màu, chữ), site (trang), poster (A4), fonts
 public/fonts/          Font tự host (Barlow Condensed, Be Vietnam Pro: subset latin + vietnamese)
 scripts/               export-print (PDF + QR), verify-qr (giải mã), decode-vision.swift (macOS)
